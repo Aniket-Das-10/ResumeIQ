@@ -3,6 +3,8 @@ dotenv.config();
 
 const port = process.env.PORT || 8080;
 const mongo_uri = process.env.MONGO_URL;
+const jwt_secret = process.env.JWT_SECRET;
+
 if (!port) {
     console.error("PORT is not defined in environment variables");
     process.exit(1);
@@ -13,7 +15,13 @@ if (!mongo_uri) {
     process.exit(1);
 }
 
+if (!jwt_secret) {
+    console.error("JWT_SECRET is not defined in environment variables");
+    process.exit(1);
+}
+
 module.exports = {
     port,
     mongo_uri,
+    jwt_secret,
 };
