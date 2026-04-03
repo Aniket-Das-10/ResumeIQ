@@ -96,19 +96,6 @@ exports.logout = async (req, res) => {
   }
 };
 
-exports.logoutalldevices = async (req, res) => {
-  try {
-    const token = req.cookies.token;
-    if (!token) {
-      return res.status(401).json({ error: "No token found" });
-    }
-    const blacklist = await Blacklist.create({ token });
-    res.clearCookie("token");
-    res.status(200).json({ message: "User logged out successfully" });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
 
 exports.getme = async (req, res) => {
   try {

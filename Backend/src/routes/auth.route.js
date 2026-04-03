@@ -11,10 +11,7 @@ router.post("/login", login);
  * /api/auth/logout
  */
 router.post("/logout", logout);
-/**
- * /api/auth/logoutalldevices
- */
-router.post("/logoutalldevices", logoutalldevices);
+
 /**
  * @routes GET api/auth/get-me
  */

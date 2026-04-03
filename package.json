@@ -1,0 +1,13 @@
+{
+  "name": "resumeiq-root",
+  "version": "1.0.0",
+  "description": "Root package.json for ResumeIQ project",
+  "scripts": {
+    "server": "npm run server --prefix Backend",
+    "client": "npm run dev --prefix Frontend",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}
