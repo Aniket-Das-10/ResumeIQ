@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { HiOutlineMenu, HiOutlineX } from 'react-icons/hi';
 
 const navLinks = [
@@ -28,7 +29,7 @@ export default function Navbar() {
       <div className="w-11/12 mx-auto">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
-          <a href="#" className="flex items-center gap-2 group" id="navbar-logo">
+          <Link to="/" className="flex items-center gap-2 group" id="navbar-logo">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center shadow-lg shadow-violet-500/25 group-hover:shadow-violet-500/40 transition-shadow">
               <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -37,7 +38,7 @@ export default function Navbar() {
             <span className="text-xl font-bold bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
               ResumeIQ
             </span>
-          </a>
+          </Link>
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-8">
@@ -55,12 +56,12 @@ export default function Navbar() {
 
           {/* Desktop CTAs */}
           <div className="hidden md:flex items-center gap-3">
-            <a href="#" id="nav-login" className="text-sm text-slate-300 hover:text-white px-4 py-2 rounded-lg transition-colors duration-200">
+            <Link to="/login" id="nav-login" className="text-sm text-slate-300 hover:text-white px-4 py-2 rounded-lg transition-colors duration-200">
               Log In
-            </a>
-            <a href="#" id="nav-signup" className="text-sm font-medium text-white px-5 py-2 rounded-lg bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 transition-all duration-200">
+            </Link>
+            <Link to="/signup" id="nav-signup" className="text-sm font-medium text-white px-5 py-2 rounded-lg bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 transition-all duration-200">
               Sign Up
-            </a>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -83,8 +84,8 @@ export default function Navbar() {
             </a>
           ))}
           <div className="pt-3 border-t border-white/5 flex flex-col gap-2">
-            <a href="#" className="text-sm text-center text-slate-300 hover:text-white px-4 py-2 rounded-lg border border-white/10">Log In</a>
-            <a href="#" className="text-sm text-center font-medium text-white px-4 py-2 rounded-lg bg-gradient-to-r from-violet-600 to-fuchsia-600">Sign Up</a>
+            <Link to="/login" className="text-sm text-center text-slate-300 hover:text-white px-4 py-2 rounded-lg border border-white/10" onClick={() => setMobileOpen(false)}>Log In</Link>
+            <Link to="/signup" className="text-sm text-center font-medium text-white px-4 py-2 rounded-lg bg-gradient-to-r from-violet-600 to-fuchsia-600" onClick={() => setMobileOpen(false)}>Sign Up</Link>
           </div>
         </div>
       </div>

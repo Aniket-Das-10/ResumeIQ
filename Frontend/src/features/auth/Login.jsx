@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   HiOutlineMail,
   HiOutlineLockClosed,
@@ -192,23 +193,28 @@ export default function Login() {
         >
           {/* Header */}
           <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-            <div
-              style={{
-                margin: '0 auto 16px',
-                width: '48px',
-                height: '48px',
-                borderRadius: '14px',
-                background: 'linear-gradient(135deg, #7c3aed, #6366f1)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: '0 0 24px rgba(124,58,237,0.35)',
-              }}
-            >
-              <svg style={{ width: '24px', height: '24px', color: 'white' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
-              </svg>
-            </div>
+            <Link to="/" style={{ textDecoration: 'none', display: 'inline-block' }}>
+              <div
+                style={{
+                  margin: '0 auto 16px',
+                  width: '48px',
+                  height: '48px',
+                  borderRadius: '14px',
+                  background: 'linear-gradient(135deg, #7c3aed, #6366f1)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 0 24px rgba(124,58,237,0.35)',
+                  transition: 'transform 0.2s ease',
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+              >
+                <svg style={{ width: '24px', height: '24px', color: 'white' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+                </svg>
+              </div>
+            </Link>
             <h1 style={{ fontSize: '26px', fontWeight: 700, color: 'white', letterSpacing: '-0.02em' }}>
               Welcome Back
             </h1>
@@ -418,8 +424,8 @@ export default function Login() {
           {/* Sign up link */}
           <p style={{ textAlign: 'center', fontSize: '14px', color: '#94a3b8', marginTop: '24px' }}>
             Don&apos;t have an account?{' '}
-            <a
-              href="#"
+            <Link
+              to="/signup"
               id="signup-link"
               style={{
                 color: '#a78bfa',
@@ -437,7 +443,7 @@ export default function Login() {
               }}
             >
               Sign up
-            </a>
+            </Link>
           </p>
         </div>
       </div>

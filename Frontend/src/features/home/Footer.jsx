@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { FiGithub, FiTwitter, FiLinkedin } from 'react-icons/fi';
 
 const footerLinks = {
@@ -20,14 +21,14 @@ export default function Footer() {
         <div className="py-12 sm:py-16 grid grid-cols-2 md:grid-cols-5 gap-8">
           {/* Brand */}
           <div className="col-span-2">
-            <a href="#" className="flex items-center gap-2 mb-4" id="footer-logo">
+            <Link to="/" className="flex items-center gap-2 mb-4" id="footer-logo">
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center">
                 <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
               </div>
               <span className="text-lg font-bold text-white">ResumeIQ</span>
-            </a>
+            </Link>
             <p className="text-sm text-slate-500 max-w-xs leading-relaxed mb-6">
               AI-powered resume intelligence platform. Build, analyze, and optimize your resume for any job.
             </p>
