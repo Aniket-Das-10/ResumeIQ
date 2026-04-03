@@ -1,9 +1,9 @@
-import Login from './features/auth/Login'
+import Home from './features/home/Home'
 
 function App() {
   return (
     <>
-      <Login />
+      <Home />
     </>
   )
 }
