@@ -1,12 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const { register, login, logout, getme } = require("../controllers/auth.controler");
+const { register, login, logout, getme, verifyOtp, resendOtp } = require("../controllers/auth.controler");
 /**
  * /api/auth/register
  * /api/auth/login
  */
 router.post("/register", register);
 router.post("/login", login);
+router.post("/verify-otp", verifyOtp);
+router.post("/resend-otp", resendOtp);
 /**
  * /api/auth/logout
  */

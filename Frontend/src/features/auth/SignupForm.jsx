@@ -1,13 +1,14 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { HiOutlineUser, HiOutlineMail, HiOutlineLockClosed } from 'react-icons/hi';
 import AuthInputField from './AuthInputField';
 
 const SignupForm = () => {
+  const navigate = useNavigate();
   const [form, setForm] = useState({ username: '', email: '', password: '' });
   const [errors, setErrors] = useState({});
   const [showPwd, setShowPwd] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [done, setDone] = useState(false);
 
   function validate() {
     const e = {};
@@ -25,7 +26,9 @@ const SignupForm = () => {
   }
 
   function handleChange(evt) {
-    const { id, value } = evt.target;
+    const id = evt.target.id === 'username' ? 'username' : evt.target.id;
+    const value = evt.target.value;
+    // Map 'username' id in form to 'userName' expected by backend
     setForm((p) => ({ ...p, [id]: value }));
     if (errors[id]) setErrors((p) => ({ ...p, [id]: '' }));
   }
@@ -34,55 +37,36 @@ const SignupForm = () => {
     evt.preventDefault();
     if (!validate()) return;
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 1400));
-    setLoading(false);
-    setDone(true);
+    setErrors({});
+
+    try {
+      const response = await fetch('http://localhost:8080/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          userName: form.username, 
+          email: form.email, 
+          password: form.password 
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Registration failed');
+      }
+
+      // Redirect to verification page, passing the email
+      navigate('/verify-email', { state: { email: form.email } });
+
+    } catch (err) {
+      setErrors({ submit: err.message });
+    } finally {
+      setLoading(false);
+    }
   }
 
-  if (done) {
-    return (
-      <div style={{ textAlign: 'center', animation: 'fadeIn 0.5s ease' }}>
-        <div
-          style={{
-            margin: '0 auto 20px',
-            width: '64px',
-            height: '64px',
-            borderRadius: '50%',
-            background: 'linear-gradient(135deg, #34d399, #14b8a6)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            boxShadow: '0 0 32px rgba(52, 211, 153, 0.3)',
-          }}
-        >
-          <svg style={{ width: '32px', height: '32px', color: 'white' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-          </svg>
-        </div>
-        <h2 style={{ fontSize: '28px', fontWeight: 700, color: 'white', marginBottom: '6px' }}>Account Created!</h2>
-        <p style={{ color: '#94a3b8', fontSize: '16px', marginBottom: '24px' }}>
-          Welcome aboard, <span style={{ color: 'white', fontWeight: 500 }}>{form.username}</span> 🎉
-        </p>
-        <button
-          onClick={() => { setDone(false); setForm({ username: '', email: '', password: '' }); }}
-          style={{
-            padding: '10px 24px',
-            borderRadius: '12px',
-            background: 'linear-gradient(135deg, #7c3aed, #ec4899)',
-            color: 'white',
-            fontWeight: 600,
-            fontSize: '14px',
-            border: 'none',
-            cursor: 'pointer',
-            boxShadow: '0 4px 20px rgba(139, 92, 246, 0.3)',
-            transition: 'transform 0.2s',
-          }}
-        >
-          Back to Sign Up
-        </button>
-      </div>
-    );
-  }
+
 
   return (
     <form onSubmit={handleSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -114,6 +98,20 @@ const SignupForm = () => {
         showPassword={showPwd}
         togglePassword={() => setShowPwd((p) => !p)}
       />
+
+      {errors.submit && (
+        <div style={{ 
+          color: '#ef4444', 
+          fontSize: '13px', 
+          textAlign: 'center', 
+          backgroundColor: 'rgba(239, 68, 68, 0.1)',
+          padding: '8px',
+          borderRadius: '8px',
+          marginTop: '4px'
+        }}>
+          {errors.submit}
+        </div>
+      )}
 
       <button
         type="submit"
