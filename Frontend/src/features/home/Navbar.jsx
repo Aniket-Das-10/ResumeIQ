@@ -1,16 +1,24 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { HiOutlineMenu, HiOutlineX } from 'react-icons/hi';
 
 const navLinks = [
+  { label: 'Home', href: '#' },
   { label: 'Features', href: '#features' },
   { label: 'How It Works', href: '#how-it-works' },
   { label: 'Benefits', href: '#benefits' },
 ];
 
+
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const location = useLocation();
+
+  const getHref = (href) => {
+    if (location.pathname === '/') return href;
+    return `/${href}`;
+  };
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -45,7 +53,7 @@ export default function Navbar() {
             {navLinks.map((link) => (
               <a
                 key={link.label}
-                href={link.href}
+                href={getHref(link.href)}
                 className="text-sm text-slate-400 hover:text-white transition-colors duration-200 relative group"
               >
                 {link.label}
@@ -55,14 +63,36 @@ export default function Navbar() {
           </div>
 
           {/* Desktop CTAs */}
-          <div className="hidden md:flex items-center gap-3">
-            <Link to="/login" id="nav-login" className="text-sm text-slate-300 hover:text-white px-4 py-2 rounded-lg transition-colors duration-200">
+          <div className="hidden md:flex items-center gap-1 bg-white/5 border border-white/10 p-1 rounded-xl relative overflow-hidden h-11">
+            {/* Sliding Indicator */}
+            <div
+              className={`absolute top-1 bottom-1 left-1 rounded-lg bg-gradient-to-r from-violet-600 to-fuchsia-600 shadow-lg shadow-violet-500/25 transition-all duration-300 ease-out z-0 h-9 ${
+                location.pathname === '/login' ? 'w-[72px] translate-x-0' : 
+                location.pathname === '/signup' ? 'w-[84px] translate-x-[76px]' : 
+                'opacity-0 w-0'
+              }`}
+            />
+
+            <Link
+              to="/login"
+              id="nav-login"
+              className={`relative z-10 text-sm font-medium px-4 py-2 rounded-lg transition-colors duration-200 ${
+                location.pathname === '/login' ? 'text-white' : 'text-slate-300 hover:text-white'
+              }`}
+            >
               Log In
             </Link>
-            <Link to="/signup" id="nav-signup" className="text-sm font-medium text-white px-5 py-2 rounded-lg bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 transition-all duration-200">
+            <Link
+              to="/signup"
+              id="nav-signup"
+              className={`relative z-10 text-sm font-medium px-5 py-2 rounded-lg transition-colors duration-200 ${
+                location.pathname === '/signup' ? 'text-white' : 'text-slate-300 hover:text-white'
+              }`}
+            >
               Sign Up
             </Link>
           </div>
+
 
           {/* Mobile Menu Button */}
           <button onClick={() => setMobileOpen(!mobileOpen)} className="md:hidden text-slate-300 hover:text-white p-2" id="mobile-menu-btn">
@@ -79,7 +109,12 @@ export default function Navbar() {
       >
         <div className="bg-[#0a0a14]/95 backdrop-blur-xl border-t border-white/5 px-4 py-4 space-y-3">
           {navLinks.map((link) => (
-            <a key={link.label} href={link.href} className="block text-sm text-slate-400 hover:text-white py-2 transition-colors" onClick={() => setMobileOpen(false)}>
+            <a
+              key={link.label}
+              href={getHref(link.href)}
+              className="block text-sm text-slate-400 hover:text-white py-2 transition-colors"
+              onClick={() => setMobileOpen(false)}
+            >
               {link.label}
             </a>
           ))}
