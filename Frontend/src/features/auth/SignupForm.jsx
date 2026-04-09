@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { HiOutlineUser, HiOutlineMail, HiOutlineLockClosed } from 'react-icons/hi';
 import AuthInputField from './AuthInputField';
+import { useAuth } from '../auth.contex';
 
 const SignupForm = () => {
   const navigate = useNavigate();
+  const { register } = useAuth();
   const [form, setForm] = useState({ username: '', email: '', password: '' });
   const [errors, setErrors] = useState({});
   const [showPwd, setShowPwd] = useState(false);
@@ -40,27 +42,11 @@ const SignupForm = () => {
     setErrors({});
 
     try {
-      const response = await fetch('http://localhost:8080/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          userName: form.username, 
-          email: form.email, 
-          password: form.password 
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Registration failed');
-      }
-
+      await register(form.username, form.email, form.password);
       // Redirect to verification page, passing the email
       navigate('/verify-email', { state: { email: form.email } });
-
     } catch (err) {
-      setErrors({ submit: err.message });
+      setErrors({ submit: err.error || 'Registration failed' });
     } finally {
       setLoading(false);
     }

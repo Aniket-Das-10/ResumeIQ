@@ -18,29 +18,32 @@ exports.register = async (req, res) => {
       return res.status(400).json({ error: "All fields are required" });
     }
 
+    // Check if a verified user already exists with this email or username
     const userExists = await User.findOne({ $or: [{ userName }, { email }] });
     if (userExists) {
-      return res.status(400).json({ error: "User already exists" });
+      return res.status(400).json({ error: "User already exists and is verified" });
     }
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.create({
-      userName,
-      email,
-      password: hashedPassword,
-    });
 
+    const hashedPassword = await bcrypt.hash(password, 10);
     const otp = generateOTP();
-    // Expiration set to 5 minutes from now
-    const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
+    const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
     
-    // Clear any previous OTPs for this email to avoid confusion
-    await Otp.deleteMany({ email });
+    // Store pending registration data in the Otp collection
+    await Otp.findOneAndUpdate(
+      { email },
+      { 
+        otp, 
+        userName, 
+        password: hashedPassword, 
+        expiresAt 
+      },
+      { upsert: true, new: true }
+    );
     
-    await Otp.create({ email, otp, expiresAt });
     await sendEmail(email, "OTP Verification", getOTPHtml(email, otp));
 
     res.status(201).json({ 
-      message: "User registered successfully. Please verify your email.",
+      message: "Verification code sent to your email. Please verify to complete registration.",
       email: email
     });
   } catch (error) {
@@ -166,18 +169,18 @@ exports.verifyOtp = async (req, res) => {
       return res.status(400).json({ error: "Invalid or expired OTP" });
     }
 
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
+    // Now create the actual User document from the pending data
+    const user = await User.create({
+      userName: otpEntry.userName,
+      email: otpEntry.email,
+      password: otpEntry.password,
+      isVerified: true
+    });
 
-    user.isVerified = true;
-    await user.save();
-
-    // Delete the OTP after successful verification
+    // Delete the OTP after successful verification and user creation
     await Otp.deleteMany({ email });
 
-    // Generate token and log user in after verification
+    // Generate token and log user in
     const token = jwt.sign({ id: user._id }, config.jwt_secret, {
       expiresIn: "1d",
     });
@@ -190,7 +193,7 @@ exports.verifyOtp = async (req, res) => {
     });
 
     res.status(200).json({ 
-      message: "Email verified successfully",
+      message: "Registration complete and email verified successfully",
       user: {
         _id: user._id,
         userName: user.userName,
@@ -214,8 +217,15 @@ exports.resendOtp = async (req, res) => {
     const otp = generateOTP();
     const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
 
-    await Otp.deleteMany({ email });
-    await Otp.create({ email, otp, expiresAt });
+    // Find the existing OTP entry to ensure we preserve userName and password
+    const existingOtp = await Otp.findOne({ email });
+    if (!existingOtp) {
+      return res.status(404).json({ error: "Registration session not found. Please sign up again." });
+    }
+
+    existingOtp.otp = otp;
+    existingOtp.expiresAt = expiresAt;
+    await existingOtp.save();
 
     await sendEmail(email, "OTP Verification", getOTPHtml(email, otp));
     res.status(200).json({ message: "OTP resent successfully" });

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { HiOutlineMenu, HiOutlineX } from 'react-icons/hi';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { HiOutlineMenu, HiOutlineX, HiOutlineLogout } from 'react-icons/hi';
+import { useAuth } from '../auth.contex';
 
 const navLinks = [
   { label: 'Home', href: '#' },
@@ -14,6 +15,8 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, isAuthenticated, logout } = useAuth();
 
   const getHref = (href) => {
     if (location.pathname === '/') return href;
@@ -62,35 +65,58 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* Desktop CTAs */}
-          <div className="hidden md:flex items-center gap-1 bg-white/5 border border-white/10 p-1 rounded-xl relative overflow-hidden h-11">
-            {/* Sliding Indicator */}
-            <div
-              className={`absolute top-1 bottom-1 left-1 rounded-lg bg-gradient-to-r from-violet-600 to-fuchsia-600 shadow-lg shadow-violet-500/25 transition-all duration-300 ease-out z-0 h-9 ${
-                location.pathname === '/login' ? 'w-[72px] translate-x-0' : 
-                location.pathname === '/signup' ? 'w-[84px] translate-x-[76px]' : 
-                'opacity-0 w-0'
-              }`}
-            />
+          {/* Desktop CTAs / User State */}
+          <div className="hidden md:flex items-center gap-4">
+            {isAuthenticated ? (
+              <div className="flex items-center gap-5">
+                <div className="flex items-center gap-3 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10">
+                  <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-violet-500 to-fuchsia-500 flex items-center justify-center text-[10px] font-bold text-white uppercase">
+                    {user?.userName?.[0]}
+                  </div>
+                  <span className="text-sm font-medium text-slate-200">{user?.userName}</span>
+                </div>
+                <button 
+                  onClick={async () => {
+                    await logout();
+                    navigate('/login');
+                  }}
+                  className="flex items-center gap-2 text-sm font-medium text-slate-400 hover:text-white transition-colors group"
+                >
+                  <HiOutlineLogout className="w-4 h-4 group-hover:text-fuchsia-500 transition-colors" />
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-1 bg-white/5 border border-white/10 p-1 rounded-xl relative overflow-hidden h-11">
+                {/* Sliding Indicator */}
+                <div
+                  className={`absolute top-1 bottom-1 left-1 rounded-lg bg-gradient-to-r from-violet-600 to-fuchsia-600 shadow-lg shadow-violet-500/25 transition-all duration-300 ease-out z-0 h-9 ${
+                    location.pathname === '/login' ? 'w-[72px] translate-x-0' : 
+                    location.pathname === '/signup' ? 'w-[84px] translate-x-[76px]' : 
+                    'opacity-0 w-0'
+                  }`}
+                />
 
-            <Link
-              to="/login"
-              id="nav-login"
-              className={`relative z-10 text-sm font-medium px-4 py-2 rounded-lg transition-colors duration-200 ${
-                location.pathname === '/login' ? 'text-white' : 'text-slate-300 hover:text-white'
-              }`}
-            >
-              Log In
-            </Link>
-            <Link
-              to="/signup"
-              id="nav-signup"
-              className={`relative z-10 text-sm font-medium px-5 py-2 rounded-lg transition-colors duration-200 ${
-                location.pathname === '/signup' ? 'text-white' : 'text-slate-300 hover:text-white'
-              }`}
-            >
-              Sign Up
-            </Link>
+                <Link
+                  to="/login"
+                  id="nav-login"
+                  className={`relative z-10 text-sm font-medium px-4 py-2 rounded-lg transition-colors duration-200 ${
+                    location.pathname === '/login' ? 'text-white' : 'text-slate-300 hover:text-white'
+                  }`}
+                >
+                  Log In
+                </Link>
+                <Link
+                  to="/signup"
+                  id="nav-signup"
+                  className={`relative z-10 text-sm font-medium px-5 py-2 rounded-lg transition-colors duration-200 ${
+                    location.pathname === '/signup' ? 'text-white' : 'text-slate-300 hover:text-white'
+                  }`}
+                >
+                  Sign Up
+                </Link>
+              </div>
+            )}
           </div>
 
 
@@ -119,8 +145,32 @@ export default function Navbar() {
             </a>
           ))}
           <div className="pt-3 border-t border-white/5 flex flex-col gap-2">
-            <Link to="/login" className="text-sm text-center text-slate-300 hover:text-white px-4 py-2 rounded-lg border border-white/10" onClick={() => setMobileOpen(false)}>Log In</Link>
-            <Link to="/signup" className="text-sm text-center font-medium text-white px-4 py-2 rounded-lg bg-gradient-to-r from-violet-600 to-fuchsia-600" onClick={() => setMobileOpen(false)}>Sign Up</Link>
+            {isAuthenticated ? (
+              <>
+                <div className="flex items-center gap-3 px-4 py-3 rounded-lg bg-white/5 border border-white/10">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-violet-500 to-fuchsia-500 flex items-center justify-center text-xs font-bold text-white uppercase">
+                    {user?.userName?.[0]}
+                  </div>
+                  <span className="text-sm font-medium text-slate-200">{user?.userName}</span>
+                </div>
+                <button 
+                  onClick={async () => {
+                    await logout();
+                    setMobileOpen(false);
+                    navigate('/login');
+                  }}
+                  className="w-full text-sm text-center font-medium text-slate-300 hover:text-white px-4 py-3 rounded-lg border border-white/10 flex items-center justify-center gap-2"
+                >
+                  <HiOutlineLogout />
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link to="/login" className="text-sm text-center text-slate-300 hover:text-white px-4 py-2 rounded-lg border border-white/10" onClick={() => setMobileOpen(false)}>Log In</Link>
+                <Link to="/signup" className="text-sm text-center font-medium text-white px-4 py-2 rounded-lg bg-gradient-to-r from-violet-600 to-fuchsia-600" onClick={() => setMobileOpen(false)}>Sign Up</Link>
+              </>
+            )}
           </div>
         </div>
       </div>

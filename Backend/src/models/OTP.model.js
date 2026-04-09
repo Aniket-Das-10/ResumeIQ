@@ -3,7 +3,9 @@ const mongoose = require('mongoose');
 const otpSchema = new mongoose.Schema({
     email: { type: String, required: true },
     otp: { type: String, required: true },
+    userName: { type: String }, // Optional: only for pending registrations
+    password: { type: String }, // Optional: only for pending registrations
     expiresAt: { type: Date, required: true, index: { expires: 0 } },
 }, { timestamps: true });
 
-module.exports = mongoose.model('OtpModel', otpSchema);
+module.exports = mongoose.model('OtpModel', otpSchema);

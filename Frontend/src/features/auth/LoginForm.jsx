@@ -1,8 +1,12 @@
 import { useState } from 'react';
 import { HiOutlineMail, HiOutlineLockClosed } from 'react-icons/hi';
+import { useNavigate } from 'react-router-dom';
 import AuthInputField from './AuthInputField';
+import { useAuth } from '../auth.contex';
 
 const LoginForm = () => {
+  const navigate = useNavigate();
+  const { login } = useAuth();
   const [form, setForm] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({});
   const [showPwd, setShowPwd] = useState(false);
@@ -31,8 +35,16 @@ const LoginForm = () => {
     evt.preventDefault();
     if (!validate()) return;
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 1400));
-    setLoading(false);
+    setErrors({});
+    
+    try {
+      await login(form.email, form.password);
+      navigate('/'); // Redirect to home on success
+    } catch (err) {
+      setErrors({ submit: err.error || 'Login failed' });
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -108,6 +120,20 @@ const LoginForm = () => {
           Forgot password?
         </a>
       </div>
+
+      {errors.submit && (
+        <div style={{ 
+          color: '#ef4444', 
+          fontSize: '13px', 
+          textAlign: 'center', 
+          backgroundColor: 'rgba(239, 68, 68, 0.1)',
+          padding: '10px',
+          borderRadius: '10px',
+          marginTop: '4px'
+        }}>
+          {errors.submit}
+        </div>
+      )}
 
       <button
         type="submit"

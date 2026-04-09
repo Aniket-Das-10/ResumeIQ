@@ -1,8 +1,8 @@
-export function generateOTP() {
+function generateOTP() {
     return Math.floor(100000 + Math.random() * 900000);
 }
 
-export function getOTPHtml(email, otp) {
+function getOTPHtml(email, otp) {
     return `<!DOCTYPE html>
     <html lang="en">
     <head>
@@ -109,3 +109,5 @@ export function getOTPHtml(email, otp) {
     </body>
     </html>`;
 }
+
+module.exports = { generateOTP, getOTPHtml };

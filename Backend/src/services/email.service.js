@@ -31,7 +31,8 @@ const sendEmail = async (to, subject, html) => {
         console.log("Email sent successfully");
     } catch (error) {
         console.error("Error sending email:", error);
+        throw error; // Re-throw to handle in controller
     }
-}   
+}
 
 module.exports = { sendEmail };

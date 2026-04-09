@@ -1,10 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { HiOutlineMailOpen, HiOutlineRefresh, HiOutlineCheckCircle } from 'react-icons/hi';
+import { useAuth } from '../auth.contex';
 
 const OTPVerification = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { verifyOtp, resendOtp, user } = useAuth();
   const email = location.state?.email || 'your email';
   
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
@@ -79,25 +81,13 @@ const OTPVerification = () => {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:8080/api/auth/verify-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, otp: fullOtp }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Verification failed');
-      }
-
+      await verifyOtp(email, fullOtp);
       setIsVerified(true);
       setTimeout(() => {
         navigate('/'); // Redirect to home or dashboard
       }, 2000);
-
     } catch (err) {
-      setError(err.message);
+      setError(err.error || 'Verification failed');
     } finally {
       setLoading(false);
     }
@@ -110,20 +100,12 @@ const OTPVerification = () => {
     setError('');
     
     try {
-      const response = await fetch('http://localhost:8080/api/auth/resend-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-      });
-
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || 'Failed to resend OTP');
-
+      await resendOtp(email);
       setTimer(60);
       setOtp(['', '', '', '', '', '']);
       inputRefs.current[0].focus();
     } catch (err) {
-      setError(err.message);
+      setError(err.error || 'Failed to resend OTP');
     } finally {
       setResending(false);
     }
