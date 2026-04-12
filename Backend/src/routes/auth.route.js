@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { register, login, logout, getme, verifyOtp, resendOtp } = require("../controllers/auth.controler");
+const { register, login, logout, getme, verifyOtp, resendOtp } = require("../controllers/auth.controller");
 /**
  * /api/auth/register
  * /api/auth/login

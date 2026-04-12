@@ -5,7 +5,7 @@
   "scripts": {
     "server": "npm run server --prefix Backend",
     "client": "npm run dev --prefix Frontend",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently -n \"SERVER,CLIENT\" -c \"blue.bold,green.bold\" \"npm run server\" \"npm run client\""
   },
   "devDependencies": {
     "concurrently": "^9.1.0"
@@ -13,7 +13,9 @@
   "dependencies": {
     "@google/genai": "^1.49.0",
     "axios": "^1.14.0",
+    "multer": "^2.1.1",
     "nodemailer": "^8.0.4",
+    "pdf-parse": "^2.4.5",
     "zod": "^4.3.6",
     "zod-to-json-schema": "^3.25.2"
   }
