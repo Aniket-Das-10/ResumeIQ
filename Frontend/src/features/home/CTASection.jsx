@@ -1,9 +1,11 @@
 import { useNavigate } from 'react-router-dom';
 import { HiOutlineArrowRight } from 'react-icons/hi';
+import { useAuth } from '../auth.contex';
 import ScrollReveal from '../../components/ScrollReveal';
 
 export default function CTASection() {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
 
   return (
     <section id="cta" className="relative py-20 sm:py-24">
@@ -33,11 +35,11 @@ export default function CTASection() {
                 Join thousands of professionals who&#39;ve leveled up their job search with ResumeIQ.
               </p>
               <button
-                onClick={() => navigate('/signup')}
+                onClick={() => navigate(isAuthenticated ? '/interview' : '/signup')}
                 id="cta-try-now"
                 className="group inline-flex items-center gap-3 px-12 py-5 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-semibold text-lg shadow-2xl shadow-violet-500/30 hover:shadow-violet-500/50 hover:scale-105 active:scale-[0.98] transition-all duration-200 cursor-pointer mt-2"
               >
-                Try Now — It&#39;s Free
+                {isAuthenticated ? 'Go to Interview' : "Try Now — It's Free"}
                 <HiOutlineArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
               </button>
             </div>

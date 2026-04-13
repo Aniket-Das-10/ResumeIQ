@@ -1,8 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 import { HiOutlineArrowRight, HiOutlineUpload } from 'react-icons/hi';
+import { useAuth } from '../auth.contex';
 
 export default function Hero() {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
 
   return (
     <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
@@ -41,22 +43,35 @@ export default function Hero() {
 
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-4" style={{ animation: 'fadeIn 1.2s ease' }}>
-          <button
-            onClick={() => navigate('/signup')}
-            id="hero-get-started"
-            className="group inline-flex items-center gap-2 px-10 py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-semibold text-lg shadow-xl shadow-violet-500/25 hover:shadow-violet-500/40 hover:scale-105 active:scale-[0.98] transition-all duration-200 cursor-pointer"
-          >
-            Get Started
-            <HiOutlineArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
-          </button>
-          <button
-            onClick={() => navigate('/login')}
-            id="hero-upload-resume"
-            className="group inline-flex items-center gap-2 px-10 py-4 rounded-xl border border-white/15 bg-white/5 backdrop-blur-sm text-slate-200 font-semibold text-lg hover:bg-white/10 hover:border-white/25 hover:scale-105 active:scale-[0.98] transition-all duration-200 cursor-pointer"
-          >
-            <HiOutlineUpload size={20} />
-            Log In
-          </button>
+          {isAuthenticated ? (
+            <button
+              onClick={() => navigate('/interview')}
+              id="hero-go-to-interview"
+              className="group inline-flex items-center gap-2 px-12 py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-semibold text-lg shadow-xl shadow-violet-500/25 hover:shadow-violet-500/40 hover:scale-105 active:scale-[0.98] transition-all duration-200 cursor-pointer"
+            >
+              Go to Interview
+              <HiOutlineArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
+            </button>
+          ) : (
+            <>
+              <button
+                onClick={() => navigate('/signup')}
+                id="hero-get-started"
+                className="group inline-flex items-center gap-2 px-10 py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-semibold text-lg shadow-xl shadow-violet-500/25 hover:shadow-violet-500/40 hover:scale-105 active:scale-[0.98] transition-all duration-200 cursor-pointer"
+              >
+                Get Started
+                <HiOutlineArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
+              </button>
+              <button
+                onClick={() => navigate('/login')}
+                id="hero-login"
+                className="group inline-flex items-center gap-2 px-10 py-4 rounded-xl border border-white/15 bg-white/5 backdrop-blur-sm text-slate-200 font-semibold text-lg hover:bg-white/10 hover:border-white/25 hover:scale-105 active:scale-[0.98] transition-all duration-200 cursor-pointer"
+              >
+                <HiOutlineUpload size={20} />
+                Log In
+              </button>
+            </>
+          )}
         </div>
 
         {/* Stats */}
