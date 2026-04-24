@@ -60,6 +60,20 @@ const generateInterview = async (req, res) => {
         ? sanitized.behavioralQuestions.map(ensureAnswer)
         : [];
 
+      // Fix Optimization Suggestions
+      if (Array.isArray(sanitized.optimizationSuggestions)) {
+        sanitized.optimizationSuggestions = sanitized.optimizationSuggestions.map((o) => ({
+          ...o,
+          type: (o.type || "keyword").toLowerCase(),
+          suggestion: o.suggestion || "N/A",
+          reason: o.reason || "Matches requirement.",
+        }));
+      } else {
+        sanitized.optimizationSuggestions = [];
+      }
+
+      sanitized.potentialScore = typeof sanitized.potentialScore === "number" ? sanitized.potentialScore : 0;
+
       return sanitized;
     };
 
@@ -80,4 +94,32 @@ const generateInterview = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-module.exports = { generateInterview };
+
+const getInterviewReport = async (req, res) => {
+  try {
+    const report = await interviewReportModel.findOne({
+      _id: req.params.id,
+      user: req.user._id,
+    });
+    if (!report) {
+      return res.status(404).json({ error: "Report not found" });
+    }
+    res.status(200).json({ interviewReport: report });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const getInterviewHistory = async (req, res) => {
+  try {
+    const reports = await interviewReportModel.find({ user: req.user._id })
+      .sort({ createdAt: -1 })
+      .select("matchScore createdAt jobDescription selfDescription");
+    
+    res.status(200).json({ reports });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+module.exports = { generateInterview, getInterviewReport, getInterviewHistory };

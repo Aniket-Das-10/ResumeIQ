@@ -2,7 +2,6 @@ import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth.contex';
 import { generateInterview } from '../services/interview.api';
-import InterviewReport from './InterviewReport';
 import './InterviewPage.css';
 
 export default function InterviewPage() {
@@ -15,7 +14,6 @@ export default function InterviewPage() {
   const [jobDescription, setJobDescription] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [report, setReport] = useState(null);
   const [dragActive, setDragActive] = useState(false);
 
   // Progress steps for loading animation
@@ -83,7 +81,7 @@ export default function InterviewPage() {
 
     try {
       const data = await generateInterview(resumeFile, selfDescription, jobDescription);
-      setReport(data.interviewReport);
+      navigate(`/interview/report/${data.interviewReport._id}`);
     } catch (err) {
       setError(err.error || 'Failed to generate interview report. Please try again.');
     } finally {
@@ -91,19 +89,6 @@ export default function InterviewPage() {
       setLoading(false);
     }
   };
-
-  const handleReset = () => {
-    setReport(null);
-    setResumeFile(null);
-    setSelfDescription('');
-    setJobDescription('');
-    setError('');
-  };
-
-  // If we have a report, show the results
-  if (report) {
-    return <InterviewReport report={report} onReset={handleReset} />;
-  }
 
   return (
     <div className="interview-page">

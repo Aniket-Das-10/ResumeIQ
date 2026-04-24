@@ -22,3 +22,21 @@ export const generateInterview = async (resumeFile, selfDescription, jobDescript
         throw error.response?.data || { error: "Network error" };
     }
 };
+
+export const getInterviewReport = async (id) => {
+    try {
+        const response = await API_URL.get(`/${id}`);
+        return response.data;
+    } catch (error) {
+        throw error.response?.data || { error: "Network error" };
+    }
+};
+
+export const getInterviewHistory = async () => {
+    try {
+        const response = await API_URL.get("/history");
+        return response.data;
+    } catch (error) {
+        throw error.response?.data || { error: "Network error" };
+    }
+};

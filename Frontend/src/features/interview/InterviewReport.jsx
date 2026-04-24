@@ -1,7 +1,9 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './InterviewPage.css';
 
 export default function InterviewReport({ report, onReset }) {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('overview');
   const [expandedQuestion, setExpandedQuestion] = useState(null);
 
@@ -11,6 +13,7 @@ export default function InterviewReport({ report, onReset }) {
     { id: 'behavioral', label: 'Behavioral Q&A', icon: behavioralIcon },
     { id: 'skillgap', label: 'Skill Gaps', icon: skillgapIcon },
     { id: 'plan', label: 'Prep Plan', icon: planIcon },
+    { id: 'optimize', label: 'Optimize Resume', icon: optimizeIcon },
   ];
 
   const toggleQuestion = (idx) => {
@@ -63,12 +66,46 @@ export default function InterviewReport({ report, onReset }) {
             </div>
             <h1 className="report-header__title">Your Interview Prep Report</h1>
           </div>
-          <button className="report-header__new-btn" onClick={onReset} id="new-report-btn">
-            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.5v15m7.5-7.5h-15" />
-            </svg>
-            New Report
-          </button>
+          <div className="report-header__actions">
+            <button 
+              className="report-header__action-btn" 
+              onClick={() => {
+                navigator.clipboard.writeText(window.location.href);
+                alert("Link copied to clipboard!");
+              }}
+              title="Copy link"
+            >
+              <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+              </svg>
+            </button>
+            <button 
+              className="report-header__action-btn" 
+              onClick={() => window.print()}
+              title="Download PDF"
+            >
+              <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </button>
+            <button className="report-header__new-btn" onClick={onReset} id="new-report-btn">
+              <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.5v15m7.5-7.5h-15" />
+              </svg>
+              New Report
+            </button>
+            <button 
+              className="report-header__new-btn" 
+              style={{ background: 'linear-gradient(135deg, #6366f1, #a855f7)' }}
+              onClick={() => navigate(`/mock-interview/${report._id}`)}
+              id="start-mock-btn"
+            >
+              <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+              </svg>
+              Start Mock Interview
+            </button>
+          </div>
         </header>
 
         {/* Score Card */}
@@ -304,6 +341,50 @@ export default function InterviewReport({ report, onReset }) {
               )}
             </div>
           )}
+
+          {activeTab === 'optimize' && (
+            <div className="report-optimize">
+              <div className="report-optimize__score-comparison">
+                <div className="score-card score-card--current">
+                  <span className="score-card__label">Current Match</span>
+                  <span className="score-card__value">{report.matchScore}%</span>
+                </div>
+                <div className="score-card__arrow">
+                  <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+                  </svg>
+                </div>
+                <div className="score-card score-card--potential">
+                  <span className="score-card__label">Potential Match</span>
+                  <span className="score-card__value">{report.potentialScore}%</span>
+                </div>
+              </div>
+
+              <div className="report-optimize__suggestions">
+                {report.optimizationSuggestions?.map((s, idx) => (
+                  <div key={idx} className={`optimize-item optimize-item--${s.type}`} id={`optimize-item-${idx}`}>
+                    <div className="optimize-item__header">
+                      <span className="optimize-item__badge">{s.type === 'bullet-point' ? 'Bullet Point' : 'Keyword'}</span>
+                      <button 
+                        className="optimize-item__copy"
+                        onClick={() => {
+                          navigator.clipboard.writeText(s.suggestion);
+                          alert('Copied to clipboard!');
+                        }}
+                      >
+                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                        Copy
+                      </button>
+                    </div>
+                    <p className="optimize-item__text">{s.suggestion}</p>
+                    <div className="optimize-item__reason">
+                      <strong>Why:</strong> {s.reason}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -343,6 +424,13 @@ function planIcon() {
   return (
     <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+    </svg>
+  );
+}
+function optimizeIcon() {
+  return (
+    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
     </svg>
   );
 }

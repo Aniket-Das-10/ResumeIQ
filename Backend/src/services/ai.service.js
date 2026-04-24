@@ -27,7 +27,13 @@ const interviewReportSchema = z.object({
         focus: z.string().describe("Title of what to focus on that day"),
         task: z.array(z.string().describe("Specific tasks/topics to cover")),
     })).describe("A structured 7-day plan to prepare for the interview"),
+    optimizationSuggestions: z.array(z.object({
+        type: z.enum(["bullet-point", "keyword"]).describe("Type of suggestion"),
+        suggestion: z.string().describe("The actual content to add (e.g., a bullet point or a keyword)"),
+        reason: z.string().describe("Why this should be added (e.g., 'Matches the Cloud Architecture requirement')"),
+    })).describe("Actionable suggestions to improve the resume match"),
     matchScore: z.number().describe("Overall match percentage (0-100)"),
+    potentialScore: z.number().describe("Potential match score if all suggestions are implemented (0-100)"),
 })  
 
 async function generateInterviewReport({ resumeText, jobDescription, selfDescription }) {
@@ -52,11 +58,13 @@ async function generateInterviewReport({ resumeText, jobDescription, selfDescrip
     2. **behavioralQuestions**: 5-7 relevant behavioral questions with intention and answer guidance.
     3. **skillGap**: Identify gaps between the resume and job description (with skill, severity [low/medium/high], and type).
     4. **preparationPlan**: A 7-day study plan (with day, focus, and tasks).
-    5. **matchScore**: A score from 0-100 representing the match between the candidate and the role.
+    5. **optimizationSuggestions**: 5-10 specific ways to improve the resume. Include "bullet-point" suggestions (actual text to add to experience) and "keyword" suggestions (skills to list).
+    6. **matchScore**: A score from 0-100 representing the current match.
+    7. **potentialScore**: The score they would have if they implement all the suggestions.
     `;
 
     const result = await genAI.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-1.5-flash",
         contents: [{ role: "user", parts: [{ text: prompt }] }],
         generationConfig: {
             responseMimeType: "application/json",

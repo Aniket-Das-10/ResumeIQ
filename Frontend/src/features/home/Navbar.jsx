@@ -69,6 +69,9 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-4">
             {isAuthenticated ? (
               <div className="flex items-center gap-5">
+                <Link to="/history" className="text-sm font-medium text-slate-400 hover:text-white transition-colors">
+                  My Reports
+                </Link>
                 <div className="flex items-center gap-3 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10">
                   <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-violet-500 to-fuchsia-500 flex items-center justify-center text-[10px] font-bold text-white uppercase">
                     {user?.userName?.[0]}
@@ -147,6 +150,9 @@ export default function Navbar() {
           <div className="pt-3 border-t border-white/5 flex flex-col gap-2">
             {isAuthenticated ? (
               <>
+                <Link to="/history" className="block text-sm text-slate-400 hover:text-white px-4 py-2 transition-colors" onClick={() => setMobileOpen(false)}>
+                  My Reports
+                </Link>
                 <div className="flex items-center gap-3 px-4 py-3 rounded-lg bg-white/5 border border-white/10">
                   <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-violet-500 to-fuchsia-500 flex items-center justify-center text-xs font-bold text-white uppercase">
                     {user?.userName?.[0]}

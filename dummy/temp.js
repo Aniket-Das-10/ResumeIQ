@@ -70,12 +70,12 @@ const sampleResume = {
 const sampleSelfDescription = `I am an aspiring Software Development Engineer and current B.Tech student with strong fundamentals in Data Structures and Algorithms. I have experience building responsive web architectures with Tailwind CSS and React.js, and designing robust backend services with Node.js and MongoDB. I am passionate about IoT innovation and real-time systems, as demonstrated by my project 'Where is my bus'. I enjoy participating in hackathons and am dedicated to delivering scalable, user-centric solutions.`;
 
 const sampleJobDescription = `
-**Position: Senior Full Stack Developer**
+**Position: Full Stack Developer**
 **Company: FutureLink Systems**
 **Location: Remote / Bangalore**
 
 **About the Role:**
-We are looking for a Senior Full Stack Developer to join our core engineering team. You will be responsible for designing and developing the next generation of our flagship SaaS product. You will work closely with product managers and other engineers to deliver high-quality features that serve thousands of users.
+We are looking for a Full Stack Developer to join our core engineering team. You will be responsible for designing and developing the next generation of our flagship SaaS product. You will work closely with product managers and other engineers to deliver high-quality features that serve thousands of users.
 
 **Key Responsibilities:**
 - Design, develop, and maintain scalable web applications using React and Node.js.

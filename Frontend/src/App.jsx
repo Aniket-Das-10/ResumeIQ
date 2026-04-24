@@ -3,6 +3,9 @@ import Home from './features/home/Home';
 import AuthPage from './features/auth/AuthPage';
 import OTPVerification from './features/auth/OTPVerification';
 import InterviewPage from './features/interview/InterviewPage';
+import ReportPage from './features/interview/ReportPage';
+import HistoryPage from './features/interview/HistoryPage';
+import MockInterviewPage from './features/interview/MockInterviewPage';
 import Navbar from './features/home/Navbar';
 import { AuthProvider, useAuth } from './features/auth.contex';
 
@@ -35,6 +38,9 @@ function AppContent() {
         <Route path="/signup" element={<AuthPage />} />
         <Route path="/verify-email" element={<OTPVerification />} />
         <Route path="/interview" element={<InterviewPage />} />
+        <Route path="/interview/report/:id" element={<ReportPage />} />
+        <Route path="/history" element={<HistoryPage />} />
+        <Route path="/mock-interview/:reportId" element={<MockInterviewPage />} />
       </Routes>
     </Router>
   );

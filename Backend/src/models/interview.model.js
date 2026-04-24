@@ -71,6 +71,24 @@ const preparationPlanSchema = new mongoose.Schema({
 {_id: false},
 )
 
+const optimizationSuggestionSchema = new mongoose.Schema({
+    type: {
+        type: String,
+        enum: ["bullet-point", "keyword"],
+        required: true
+    },
+    suggestion: {
+        type: String,
+        required: true
+    },
+    reason: {
+        type: String,
+        required: true
+    }
+},
+{_id: false},
+)
+
 
 const interviewReportSchema = new mongoose.Schema({
     jobDescription: {
@@ -94,6 +112,12 @@ const interviewReportSchema = new mongoose.Schema({
     behavioralQuestions: [behavioralQuestionsSchema],
     skillGap: [skillGapSchema],
     preparationPlan: [preparationPlanSchema],
+    optimizationSuggestions: [optimizationSuggestionSchema],
+    potentialScore: {
+        type: Number,
+        min: 0,
+        max: 100
+    },
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",

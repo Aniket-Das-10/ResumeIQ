@@ -1,0 +1,179 @@
+.mock-page {
+    min-height: 100vh;
+    padding: 2rem;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.mock-container {
+    width: 100%;
+    max-width: 900px;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    height: 85vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    z-index: 10;
+}
+
+/* Header */
+.mock-header {
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.mock-header__title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    background: linear-gradient(135deg, #fff 0%, rgba(255, 255, 255, 0.7) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.mock-progress {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.mock-progress__bar {
+    width: 200px;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.mock-progress__fill {
+    height: 100%;
+    background: linear-gradient(90deg, #6366f1, #a855f7);
+    transition: width 0.5s ease;
+}
+
+/* Chat Area */
+.mock-chat {
+    flex: 1;
+    overflow-y: auto;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.chat-bubble {
+    max-width: 80%;
+    padding: 1.25rem;
+    border-radius: 18px;
+    font-size: 1rem;
+    line-height: 1.6;
+    animation: fadeInSlide 0.4s ease-out;
+}
+
+.chat-bubble--ai {
+    align-self: flex-start;
+    background: rgba(255, 255, 255, 0.05);
+    border-bottom-left-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.chat-bubble--user {
+    align-self: flex-end;
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+    border-bottom-right-radius: 4px;
+    color: white;
+}
+
+.feedback-card {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    border-left: 4px solid #10b981;
+}
+
+.feedback-card__score {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: rgba(16, 185, 129, 0.2);
+    color: #10b981;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+/* Input Area */
+.mock-input-area {
+    padding: 1.5rem 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    gap: 1rem;
+}
+
+.mock-input {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 0.75rem 1.25rem;
+    color: white;
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.mock-input:focus {
+    border-color: #6366f1;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.mock-send-btn {
+    background: #6366f1;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 0 1.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.mock-send-btn:hover:not(:disabled) {
+    background: #4f46e5;
+    transform: translateY(-2px);
+}
+
+.mock-send-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+@keyframes fadeInSlide {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Summary Screen */
+.summary-screen {
+    text-align: center;
+    padding: 3rem;
+}
+
+.summary-score {
+    font-size: 4rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #6366f1, #a855f7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1rem;
+}
