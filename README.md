@@ -1,6 +1,6 @@
 # 🚀 ResumeIQ - AI-Powered Career Accelerator
 
-ResumeIQ is a premium, AI-driven platform designed to help job seekers optimize their resumes and master their interviews. Using state-of-the-art **Google Gemini 1.5 Flash** models, it provides real-time feedback and actionable career advice.
+ResumeIQ is a premium, AI-driven platform designed to help job seekers optimize their resumes and master their interviews. Using state-of-the-art **Google Gemini 2.5 Flash** models, it provides real-time feedback and actionable career advice.
 
 ## ✨ Key Features
 
