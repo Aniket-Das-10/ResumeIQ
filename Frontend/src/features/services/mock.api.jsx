@@ -1,7 +1,8 @@
 import axios from "axios";
+import API_BASE_URL from "../../config/api.config";
 
 const API_URL = axios.create({
-    baseURL: "http://localhost:5000/api/mock-interview",
+    baseURL: `${API_BASE_URL}/api/mock-interview`,
     withCredentials: true,
 });
 
