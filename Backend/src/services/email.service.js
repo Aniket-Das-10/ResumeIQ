@@ -14,9 +14,10 @@ const transporter = nodemailer.createTransport({
 
 transporter.verify((error, success) => {
     if (error) {
-        console.error('Error setting up email transporter:', error);
+        console.error('❌ EMAIL ERROR: Failed to verify transporter. Check your GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, and GOOGLE_REFRESH_TOKEN in .env');
+        console.error('Specific Error Details:', error.message);
     } else {
-        console.log('Email transporter is ready to send messages');
+        console.log('✅ Email transporter is ready to send messages');
     }
 });
 
@@ -28,9 +29,12 @@ const sendEmail = async (to, subject, html) => {
             subject,
             html,
         });
-        console.log("Email sent successfully");
+        console.log(`📧 Email sent successfully to ${to}`);
     } catch (error) {
-        console.error("Error sending email:", error);
+        console.error("❌ Error sending email:", error.message);
+        if (error.message.includes('invalid_grant') || error.message.includes('unauthorized_client')) {
+            throw new Error("Email service is temporarily unavailable due to authentication issues. Please contact support or try again later.");
+        }
         throw error; // Re-throw to handle in controller
     }
 }
