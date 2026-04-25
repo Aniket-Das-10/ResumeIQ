@@ -23,10 +23,10 @@ ResumeIQ is a premium, AI-driven platform designed to help job seekers optimize 
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: React 19, Vite, Tailwind CSS 4, Framer Motion (for animations).
+- **Frontend**: React 19, Vite, Tailwind CSS, Framer Motion (for animations).
 - **Backend**: Node.js, Express.
 - **Database**: MongoDB (Mongoose).
-- **AI**: Google Gemini 1.5 Flash (via `@google/genai`).
+- **AI**: Google Gemini 2.5 Flash (via `@google/genai`).
 - **Validation**: Zod (Structured JSON output).
 
 ---
@@ -52,15 +52,18 @@ ResumeIQ is a premium, AI-driven platform designed to help job seekers optimize 
    npm install
    # Create a .env file with:
    # PORT=5000
-   # MONGO_URI=your_mongodb_uri
+   # MONGO_URL=your_mongodb_uri
    # JWT_SECRET=your_secret
    # GOOGLE_API_KEY=your_gemini_key
+   # FRONTEND_URL=http://localhost:5173
    ```
 
 3. **Setup Frontend**
    ```bash
    cd ../Frontend
    npm install
+   # Create a .env file with:
+   # VITE_BACKEND_URL=http://localhost:5000
    ```
 
 4. **Run the Project**
@@ -69,10 +72,24 @@ ResumeIQ is a premium, AI-driven platform designed to help job seekers optimize 
    npm run dev
    ```
 
+---
+
+## 🌐 Deployment Guide
+
+### Backend (Render)
+1. Set the environment variables in the Render dashboard.
+2. Ensure `FRONTEND_URL` is set to your Vercel URL (e.g., `https://your-app.vercel.app`) to allow CORS.
+3. If using multiple URLs, separate them with a comma.
+
+### Frontend (Vercel)
+1. Set `VITE_BACKEND_URL` to your Render backend URL.
+2. The project includes a `vercel.json` to handle SPA routing (prevents 404 on refresh).
+
+---
+
 ## 🎨 Design Philosophy
 ResumeIQ uses a **Premium Dark UI** with glassmorphism and smooth animations. The interface is designed to feel alive, responsive, and high-value, ensuring a professional experience for all users.
 
 ---
 
-## 📄 License
-Distributed under the MIT License. See `LICENSE` for more information.
+
