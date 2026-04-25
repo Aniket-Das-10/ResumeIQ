@@ -45,7 +45,7 @@ async function evaluateMockAnswer({
 
   try {
     const result = await genAI.models.generateContent({
-      model: "gemini-1.5-flash",
+      model: "gemini-2.5-flash",
       contents: [{ role: "user", parts: [{ text: prompt }] }],
       generationConfig: {
         responseMimeType: "application/json",
@@ -68,6 +68,11 @@ async function evaluateMockAnswer({
     const jsonMatch = text.match(/```json\s?([\s\S]*?)\s?```/) || text.match(/```\s?([\s\S]*?)\s?```/);
     const sanitizedText = jsonMatch ? jsonMatch[1].trim() : text.trim();
 
+    if (result.response.usageMetadata) {
+      const { promptTokenCount, candidatesTokenCount, totalTokenCount } = result.response.usageMetadata;
+      console.log(`📊 [Mock Eval] Tokens Used: ${totalTokenCount} (Prompt: ${promptTokenCount}, Response: ${candidatesTokenCount})`);
+    }
+
     return JSON.parse(sanitizedText);
   } catch (error) {
     console.error("CRITICAL: Gemini Evaluation Error:", error.message);
@@ -86,7 +91,10 @@ async function chatWithAI({ message, history, jobDescription }) {
     const validHistory = [];
     let lastRole = null;
 
-    for (const h of history) {
+    // Limit history to the last 6 turns to save tokens
+    const recentHistory = history.slice(-6);
+    
+    for (const h of recentHistory) {
       const currentRole = h.role === "ai" ? "model" : "user";
       if (currentRole !== lastRole) {
         validHistory.push({
@@ -102,23 +110,27 @@ async function chatWithAI({ message, history, jobDescription }) {
     }
 
     const chat = genAI
-      .getGenerativeModel({ model: "gemini-1.5-flash" })
+      .getGenerativeModel({ model: "gemini-2.5-flash" })
       .startChat({
         history: validHistory,
         generationConfig: {
-          maxOutputTokens: 500,
+          maxOutputTokens: 300, // Reduced from 500
         },
       });
 
     const prompt = `
-      Context: You are a friendly and professional interviewer. 
-      The job description is: ${jobDescription}.
-      
-      The user is asking a follow-up question or making a comment: "${message}".
-      Please reply naturally and keep the interview context.
+      Context: Professional interviewer. Job: ${jobDescription.substring(0, 1000)}.
+      Reply to: "${message}". 
+      Keep it brief and natural (max 2-3 sentences).
       `;
 
     const result = await chat.sendMessage(prompt);
+
+    if (result.response.usageMetadata) {
+      const { promptTokenCount, candidatesTokenCount, totalTokenCount } = result.response.usageMetadata;
+      console.log(`📊 [Mock Chat] Tokens Used: ${totalTokenCount} (Prompt: ${promptTokenCount}, Response: ${candidatesTokenCount})`);
+    }
+
     return result.response.text();
   } catch (error) {
     console.error("CRITICAL: Chat Reply Error:", error.message);
@@ -133,12 +145,12 @@ async function generateOverallSummary(interactions) {
     Interactions:
     ${JSON.stringify(interactions)}
 
-    Provide a summary of strengths, areas for improvement, and a final career advice note.
-    Return as a simple text summary.
+    Provide a concise summary of strengths, areas for improvement, and a final career advice note.
+    Return as a simple text summary (max 150 words).
     `;
 
   const result = await genAI.models.generateContent({
-    model: "gemini-1.5-flash",
+    model: "gemini-2.5-flash",
     contents: [{ role: "user", parts: [{ text: prompt }] }],
   });
 

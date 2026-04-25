@@ -64,7 +64,7 @@ async function generateInterviewReport({ resumeText, jobDescription, selfDescrip
     `;
 
     const result = await genAI.models.generateContent({
-        model: "gemini-1.5-flash",
+        model: "gemini-2.5-flash",
         contents: [{ role: "user", parts: [{ text: prompt }] }],
         generationConfig: {
             responseMimeType: "application/json",
@@ -87,6 +87,13 @@ async function generateInterviewReport({ resumeText, jobDescription, selfDescrip
         const sanitizedText = jsonMatch ? jsonMatch[1].trim() : text.trim();
 
         const reportData = JSON.parse(sanitizedText);
+        
+        // Log Token Usage
+        if (result.response.usageMetadata) {
+            const { promptTokenCount, candidatesTokenCount, totalTokenCount } = result.response.usageMetadata;
+            console.log(`📊 [AI Report] Tokens Used: ${totalTokenCount} (Prompt: ${promptTokenCount}, Response: ${candidatesTokenCount})`);
+        }
+
         console.log("AI Report Generated Successfully");
         return reportData;
     } catch (error) {
