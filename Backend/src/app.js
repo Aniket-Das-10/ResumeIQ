@@ -24,7 +24,7 @@ app.use(cors({
     const normalizedOrigin = origin.replace(/\/$/, "");
     const isAllowed = allowedOrigins.some(allowed => 
       allowed && allowed.replace(/\/$/, "") === normalizedOrigin
-    );
+    ) || (normalizedOrigin.endsWith(".vercel.app") && normalizedOrigin.includes("resume-iq"));
 
     if (isAllowed) {
       callback(null, true);
