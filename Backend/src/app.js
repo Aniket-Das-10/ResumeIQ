@@ -12,7 +12,7 @@ const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:5174",
   "http://localhost:3000",
-  config.FRONTEND_URL
+  ...(config.FRONTEND_URL ? config.FRONTEND_URL.split(",").map(url => url.trim()) : [])
 ].filter(Boolean);
 
 app.use(cors({
