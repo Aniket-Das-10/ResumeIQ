@@ -8,6 +8,8 @@ const GOOGLE_USER = process.env.GOOGLE_USER;
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 const GOOGLE_REFRESH_TOKEN = process.env.GOOGLE_REFRESH_TOKEN;
+const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
+const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
 
 if (!port) {
     console.error("PORT is not defined in environment variables");
@@ -32,4 +34,6 @@ module.exports = {
     GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET,
     GOOGLE_REFRESH_TOKEN,
+    GOOGLE_API_KEY,
+    FRONTEND_URL,
 };

@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
+const config = require("./config/config");
 const app = express();
 const authRouter = require("./routes/auth.route");
 const interviewRouter = require("./routes/interview.route");
@@ -8,7 +9,7 @@ const mockRouter = require("./routes/mock.route");
 const cookieParser = require("cookie-parser")
 
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: config.FRONTEND_URL,
   credentials: true
 }));
 app.use(morgan("dev"));

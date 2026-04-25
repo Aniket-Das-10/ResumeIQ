@@ -1,8 +1,8 @@
 const { GoogleGenAI } = require("@google/genai");
-require("dotenv").config();
+const config = require("../config/config");
 const { z } = require("zod");
 
-const genAI = new GoogleGenAI(process.env.GOOGLE_API_KEY);
+const genAI = new GoogleGenAI(config.GOOGLE_API_KEY);
 
 const evaluationSchema = z.object({
   feedback: z
